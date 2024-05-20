@@ -174,7 +174,17 @@ class Graph(GraphBluePrint):
         """
         queue = deque([self.start])
         history = {self.start}
-        raise NotImplementedError("Please complete this method")
+        while queue:
+            currentNode = queue.popleft()
+            actions = self.neighbour_coordinates(currentNode)
+            self.adjacency_list_add_node(currentNode, actions)
+
+            for next_node in actions:
+                if next_node not in history:
+                    history.add(next_node)
+                    queue.append(next_node)
+
+
                     
     def adjacency_list_add_node(self, coordinate, actions):
         """
@@ -189,7 +199,8 @@ class Graph(GraphBluePrint):
         :param actions: The actions possible from this coordinate, an action is defined as an action in the coordinate state-space.
         :type actions: list[tuple[int]]
         """
-        raise NotImplementedError("Please complete this method")
+        if len(actions) != 2:
+            self.adjacency_list[coordinate] = set()
                            
     def neighbour_coordinates(self, coordinate):
         """
@@ -201,7 +212,14 @@ class Graph(GraphBluePrint):
         :return: A list with possible next coordinates that can be visited from the current coordinate.
         :rtype: list[tuple[int]]  
         """
-        raise NotImplementedError("Please complete this method")
+        x, y  = coordinate
+        directions = [(0,1), (-1,0), (0,1), (0,-1)]
+        neighbours = []
+        for dx, dy in directions:
+            next_coordinate = (x +dx, y+dy)
+            if self.map.is_road(next_coordinate):
+                neighbours.append(next_coordinate)
+        return neighbours
     
     def __repr__(self):
         """
